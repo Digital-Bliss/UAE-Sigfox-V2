@@ -1,0 +1,1269 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <title>Coverage area</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==" crossorigin=""/>
+		<script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js" integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw==" crossorigin=""></script>
+		<!-- <link href="bower_components/leaflet/dist/leaflet.css" rel="stylesheet" type="text/css"/> -->
+		<!-- <link href="map.css" rel="stylesheet" type="text/css"/> -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+    </head>
+    <body onload="run()">
+        <div id="map" style="width: 100%; height: 100%; position: absolute">
+        </div>
+    </body>
+	
+	
+	<body>
+  <script>
+    L.Control.ZoomDisplay = L.Control.extend({
+    options: {
+        position: 'topleft'
+    },
+
+    onAdd: function (map) {
+        this._map = map;
+        this._container = L.DomUtil.create('div', 'leaflet-control-zoom-display leaflet-bar-part leaflet-bar');
+        this.updateMapZoom(map.getZoom());
+        map.on('zoomend', this.onMapZoomEnd, this);
+        return this._container;
+    },
+
+    onRemove: function (map) {
+        map.off('zoomend', this.onMapZoomEnd, this);
+    },
+
+    onMapZoomEnd: function (e) {
+        this.updateMapZoom(this._map.getZoom());
+    },
+
+    updateMapZoom: function (zoom) {
+        if(typeof(zoom) === "undefined"){zoom = ""}
+        this._container.innerHTML = zoom;
+    }
+});
+
+L.Map.mergeOptions({
+    zoomDisplayControl: true
+});
+
+L.Map.addInitHook(function () {
+    if (this.options.zoomDisplayControl) {
+        this.zoomDisplayControl = new L.Control.ZoomDisplay();
+        this.addControl(this.zoomDisplayControl);
+    }
+});
+
+L.control.zoomDisplay = function (options) {
+    return new L.Control.ZoomDisplay(options);
+};
+  </script>
+  </body>
+	
+<body>
+  <script>
+  function run () {
+
+    var basestations = L.layerGroup();
+    
+    var myIcon = L.icon({
+        iconUrl: 'bs.png',
+        iconSize: [16, 16],
+        iconAnchor: [8, 8],
+        popupAnchor: [1, -8],
+    });
+	
+    L.marker([25.297844, 55.360655], {icon: myIcon}).bindPopup('Amanath - Apartment complex').addTo(basestations);L.marker([25.232722, 55.46982], {icon: myIcon}).bindPopup('FIRST KHAWANEEJ').addTo(basestations);L.marker([25.225671, 55.375725], {icon: myIcon}).bindPopup('UMRAMOOL').addTo(basestations);L.marker([25.163176, 55.439685], {icon: myIcon}).bindPopup('SCNDWRSN').addTo(basestations);L.marker([25.22712, 55.281995], {icon: myIcon}).bindPopup('GARDEN CITY').addTo(basestations);L.marker([25.106148, 55.370865], {icon: myIcon}).bindPopup('LIWAN').addTo(basestations);L.marker([25.179903, 55.3052], {icon: myIcon}).bindPopup('Sobha - Apartment building').addTo(basestations);L.marker([25.154266, 55.23149], {icon: myIcon}).bindPopup('WORKSHOP').addTo(basestations);L.marker([25.115562, 55.252175], {icon: myIcon}).bindPopup('RABWAH').addTo(basestations);L.marker([25.064653, 55.242794], {icon: myIcon}).bindPopup('MIRACLE').addTo(basestations);L.marker([25.098103, 55.156477], {icon: myIcon}).bindPopup('Concord Tower').addTo(basestations);L.marker([25.029778, 55.206718], {icon: myIcon}).bindPopup('Al Andalus Tower').addTo(basestations);L.marker([24.908506, 55.121328], {icon: myIcon}).bindPopup('DLPO').addTo(basestations);L.marker([25.045702, 55.118284], {icon: myIcon}).bindPopup('Avani Ibn Battuta Dubai Hotel').addTo(basestations);L.marker([24.969326, 55.088356], {icon: myIcon}).bindPopup('Damac Tower').addTo(basestations);L.marker([24.48418, 54.361262], {icon: myIcon}).bindPopup('Hanif Residence').addTo(basestations);L.marker([24.447737, 54.394206], {icon: myIcon}).bindPopup('Khalifa University').addTo(basestations);L.marker([24.533168, 54.421147], {icon: myIcon}).bindPopup('Cranleigh Tower').addTo(basestations);L.marker([24.418258, 54.465358], {icon: myIcon}).bindPopup('Albaher Real Estate Development').addTo(basestations);L.marker([24.411559, 54.590314], {icon: myIcon}).bindPopup('Central Mall ').addTo(basestations);L.marker([24.523497, 54.671258], {icon: myIcon}).bindPopup('Deerfields Mall').addTo(basestations);L.marker([24.345716, 54.539062], {icon: myIcon}).bindPopup('Al Ain University - Abu Dhabi Campus').addTo(basestations);
+
+    var zrp = L.tileLayer('tiles/{z}/{x}/{y}.png', {
+		minZoom: 5,
+		maxZoom: 15,
+		maxNativeZoom: 13
+	});  
+
+    var osm = L.tileLayer('http://a.tile.opentopomap.org/{z}/{x}/{y}.png', {minZoom: 5, maxZoom: 15}),
+            falkosm = L.tileLayer('http://ec2.cdn.ecmaps.de/WmsGateway.ashx.jpg?TileX={x}&TileY={y}&ZoomLevel={z}&Experience=falk&MapStyle=Falk%20OSM', {minZoom: 5, maxZoom: 15}),
+            esrisat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.jpg', {minZoom: 5, maxZoom: 15}),
+            esritopo = L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}.jpg', {minZoom: 5, maxZoom: 15});
+
+    var overlays = {
+        "Coverage Area": zrp,
+        "Base Stations": basestations
+    };
+
+    var map = new L.Map('map', {
+        layers: [
+            osm,
+            zrp, 
+            basestations
+        ]
+    });
+
+
+    map.setView([24.34572, 54.53906], 11);
+
+    var baseMaps = {
+        "OpenTopoMap": osm,
+        "Falk OSM": falkosm,
+        "ESRI Sat": esrisat,
+        "ESRI Topo": esritopo
+    };
+
+    L.control.layers(baseMaps, overlays, {collapsed: false}).addTo(map);
+    L.DomUtil.addClass(map._container,'crosshair-cursor-enabled');
+    document.getElementById('map').style.color = 'black';
+    map.attributionControl._attributions = {};
+    map.attributionControl.addAttribution('<a href="http://mlinkplanner.com" title="Calculation of the coverage area is performed by using RadioPlanner">RadioPlanner</a>');
+    
+
+    L.control.scale({ position: 'bottomleft', imperial:false, maxWidth:200}).addTo(map);
+    
+    L.control.mouseCoordinate().addTo(map);
+    
+    
+    function onEachFeature(feature, layer) {if (feature.properties && feature.properties.popupContent) {layer.bindPopup(feature.properties.popupContent);}}
+var UserLines0 = {"type": "FeatureCollection", "features": [
+{"geometry":{"type":"LineString","coordinates":[[54.4721766162949,24.5827872098226],[54.4707436410924,24.5850428875191],[54.4234794322559,24.5440940998567],[54.3565206877531,24.5337161551971],[54.2943094917637,24.4620305910757],[54.3125230714759,24.446331166502],[54.3322450995242,24.4170984121309],[54.3979456694581,24.3942712216834],[54.4646884321123,24.3669096365581],[54.4255567120942,24.2892755059806],[54.4735373696493,24.2569408799797],[54.5988719833976,24.3078739054169],[54.6804043175196,24.4317644573198],[54.696255172166,24.5635391780154],[54.6365678261077,24.5801054301617],[54.5978679946612,24.4959403837296],[54.5375760332496,24.497578595551],[54.4930119835023,24.5399489260512]]},"type": "Feature","properties": {"popupContent": "Abu Dhabi"}},
+]};
+var LinesStyle0 = {"color": "#FF0000", "weight": 2, "opacity": 1};
+L.geoJSON(UserLines0, {style: LinesStyle0, onEachFeature: onEachFeature}).addTo(map);
+var UserLines1 = {"type": "FeatureCollection", "features": [
+{"geometry":{"type":"LineString","coordinates":[[55.0252264832663,24.9858326675636],[55.0939140595071,24.9026247719991],[55.1675696359118,24.8576840868648],[55.2420279636792,24.9788991145695],[55.3325415707753,25.0617580743375],[55.4753525584118,25.1587969138491],[55.5675900192335,25.2378907107716],[55.3675451060442,25.3428298095589],[55.2780160648234,25.26798563996],[55.1307777103577,25.080879489832],[55.0271091420718,24.9889104272587],[55.0259092017145,24.9869388783491]]},"type": "Feature","properties": {"popupContent": "Dubai"}},
+]};
+var LinesStyle1 = {"color": "#FF0000", "weight": 2, "opacity": 1};
+L.geoJSON(UserLines1, {style: LinesStyle1, onEachFeature: onEachFeature}).addTo(map);
+
+	var color1 = '<span class="fa fa-stop fa-fw"; style="color: rgb(255,0,0)"></span> > -100 dBm Deep Indoor</br><span class="fa fa-stop fa-fw"; style="color: rgb(0,255,0)"></span> > -110 dBm Indoor</br><span class="fa fa-stop fa-fw"; style="color: rgb(0,0,255)"></span> > -130 dBm Outdoor</br>';var legend = L.control.LegendContainer().setContent("<strong><center>Sigfox-Coverage-Planning-UAE</br>Received power Downlink</center></strong><strong><left>Mobile Unit №1</left></strong></br>"+color1+"</br>Percentage of location: 95%</br>Percentage of time: 95%").addTo(map);
+      
+    var legControl = L.control({position: 'topleft'});
+    legControl.onAdd = function (map) {
+        var div = L.DomUtil.create('div', 'leaflet-control-locate leaflet-bar leaflet-control');
+        var link = L.DomUtil.create('a', 'leaflet-bar-part leaflet-bar-part-single', div);
+        link.title = 'Legend';
+        var icon = L.DomUtil.create('span', 'fa fa-map', link);
+        link.onclick = function () {
+            legend.open();
+        };
+        return div;
+    };
+    legControl.addTo(map);  
+};
+  </script>
+ </body>
+	
+<body>
+  <script>
+  L.Control.LegendContainer = L.Control.extend({
+    options: {
+    size: [ 300, 330 ],
+    minSize: [ 200, 220 ],
+    maxSize: [ 500, 700 ],
+    anchor: [ 170, 2 ],
+    position: 'topleft',
+    initOpen: true
+  },
+
+  initialize: function (options){
+    this.options = JSON.parse(JSON.stringify(this.options));
+    L.setOptions(this, options);
+
+    this._attributions = {};
+  },
+
+  onAdd: function (map){
+
+    this._initLayout();
+    this._map = map;
+
+    this.update();
+
+    if(!this.options.initOpen){
+      this.close();
+    }
+
+    return this._container;
+  },
+
+  open: function(){
+    if(!this._map){
+      return;
+    }
+    this._container.style.visibility = '';
+
+    this._map.fire('dialog:opened', this);
+
+    return this;
+  },
+
+  close: function(){
+    this._container.style.visibility = 'hidden';
+
+    this._map.fire('dialog:closed', this);
+    return this;
+  },
+
+  destroy: function(){
+    if(!this._map){ return this; }
+
+    this.removeFrom(this._map);
+
+    if (this.onRemove) {
+      this.onRemove(this._map);
+    }
+
+    this._map.fire('dialog:destroyed', this);
+    return this;
+  },
+
+  setLocation: function(location){
+    location = location || [ 250, 250 ];
+
+    this.options.anchor[0] = 0;
+    this.options.anchor[1] = 0;
+    this._oldMousePos.x = 0;
+    this._oldMousePos.y = 0;
+
+    this._move(location[1], location[0]);
+
+    return this;
+  },
+
+  setSize: function(size){
+    size = size || [ 300, 300 ];
+
+    this.options.size[0] = 0;
+    this.options.size[1] = 0;
+    this._oldMousePos.x = 0;
+    this._oldMousePos.y = 0;
+
+    this._resize(size[0], size[1]);
+
+    return this;
+  },
+
+  lock: function(){
+    this._resizerNode.style.visibility = 'hidden';
+    this._grabberNode.style.visibility = 'hidden';
+    this._closeNode.style.visibility = 'hidden';
+
+    this._map.fire('dialog:locked', this);
+    return this;
+  },
+
+  unlock: function(){
+    this._resizerNode.style.visibility = '';
+    this._grabberNode.style.visibility = '';
+    this._closeNode.style.visibility = '';
+
+    this._map.fire('dialog:unlocked', this);
+    return this;
+  },
+
+  freeze: function(){
+    this._resizerNode.style.visibility = 'hidden';
+    this._grabberNode.style.visibility = 'hidden';
+
+    this._map.fire('dialog:frozen', this);
+    return this;
+  },
+
+  unfreeze : function(){
+    this._resizerNode.style.visibility = '';
+    this._grabberNode.style.visibility = '';
+
+    this._map.fire('dialog:unfrozen', this);
+    return this;
+  },
+
+  hideClose: function(){
+    this._closeNode.style.visibility = 'hidden';
+
+    this._map.fire('dialog:closehidden', this);
+    return this;
+  },
+
+  showClose: function(){
+    this._closeNode.style.visibility = '';
+
+    this._map.fire('dialog:closeshown', this);
+    return this;
+  },
+
+  hideResize: function(){
+    this._resizerNode.style.visibility = 'hidden';
+
+    this._map.fire('dialog:resizehidden', this);
+    return this;
+  },
+
+  showResize: function(){
+    this._resizerNode.style.visibility = '';
+
+    this._map.fire('dialog:resizeshown', this);
+    return this;
+  },
+
+  setContent: function(content){
+    this._content = content;
+    this.update();
+    return this;
+  },
+
+  getContent: function(){
+    return this._content;
+  },
+
+  getElement: function(){
+    return this._container;
+  },
+
+  update: function(){
+    if (!this._map) { return; }
+
+    this._container.style.visibility = 'hidden';
+
+    this._updateContent();
+    this._updateLayout();
+
+    this._container.style.visibility = '';
+    this._map.fire('dialog:updated', this);
+
+  },
+
+  _initLayout: function(){
+    var className = 'leaflet-control-dialog',
+      container = this._container = L.DomUtil.create('div', className);
+
+    container.style.width = this.options.size[0] + 'px';
+    container.style.height = this.options.size[1] + 'px';
+
+    container.style.top = this.options.anchor[0] + 'px';
+    container.style.left = this.options.anchor[1] + 'px';
+
+    var stop = L.DomEvent.stopPropagation;
+    L.DomEvent
+        .on(container, 'click', stop)
+        .on(container, 'mousedown', stop)
+        .on(container, 'touchstart', stop)
+        .on(container, 'dblclick', stop)
+        .on(container, 'mousewheel', stop)
+        .on(container, 'contextmenu', stop)
+        .on(container, 'MozMousePixelScroll', stop);
+
+    var innerContainer = this._innerContainer = L.DomUtil.create('div', className + '-inner');
+
+    var grabberNode = this._grabberNode = L.DomUtil.create('div', className + '-grabber');
+    var grabberIcon = L.DomUtil.create('i', 'fa fa-arrows');
+    grabberNode.appendChild(grabberIcon);
+
+    L.DomEvent.on(grabberNode, 'mousedown', this._handleMoveStart, this);
+
+    var closeNode = this._closeNode = L.DomUtil.create('div', className + '-close');
+    var closeIcon = L.DomUtil.create('i', 'fa fa-times');
+    closeNode.appendChild(closeIcon);
+    L.DomEvent.on(closeNode, 'click', this._handleClose, this);
+
+    var resizerNode = this._resizerNode = L.DomUtil.create('div', className + '-resizer');
+    var resizeIcon = L.DomUtil.create('i', 'fa fa-arrows-h fa-rotate-45');
+    resizerNode.appendChild(resizeIcon);
+
+    L.DomEvent.on(resizerNode, 'mousedown', this._handleResizeStart, this);
+
+    var contentNode = this._contentNode = L.DomUtil.create('div', className + "-contents");
+
+    container.appendChild(innerContainer);
+
+    innerContainer.appendChild(contentNode);
+    innerContainer.appendChild(grabberNode);
+    innerContainer.appendChild(closeNode);
+    innerContainer.appendChild(resizerNode);
+
+    this._oldMousePos = { x: 0, y: 0 };
+
+  },
+
+  _handleClose: function(){
+    this.close();
+  },
+
+  _handleResizeStart: function(e){
+    this._oldMousePos.x = e.clientX;
+    this._oldMousePos.y = e.clientY;
+
+    L.DomEvent.on(this._map, 'mousemove', this._handleMouseMove, this);
+    L.DomEvent.on(this._map, 'mouseup', this._handleMouseUp, this);
+
+    this._map.fire('dialog:resizestart', this);
+    this._resizing = true;
+  },
+
+  _handleMoveStart: function(e){
+    this._oldMousePos.x = e.clientX;
+    this._oldMousePos.y = e.clientY;
+
+    L.DomEvent.on(this._map, 'mousemove', this._handleMouseMove, this);
+    L.DomEvent.on(this._map, 'mouseup', this._handleMouseUp, this);
+
+    this._map.fire('dialog:movestart', this);
+    this._moving = true;
+  },
+
+  _handleMouseMove: function(e){
+    var diffX = e.originalEvent.clientX - this._oldMousePos.x,
+      diffY = e.originalEvent.clientY - this._oldMousePos.y;
+
+      // this helps prevent accidental highlighting on drag:
+    if(e.originalEvent.stopPropagation){ e.originalEvent.stopPropagation(); }
+    if(e.originalEvent.preventDefault){ e.originalEvent.preventDefault(); }
+
+    if(this._resizing){
+      this._resize(diffX, diffY);
+    }
+
+    if(this._moving){
+      this._move(diffX, diffY);
+    }
+  },
+
+  _handleMouseUp: function(){
+    L.DomEvent.off(this._map, 'mousemove', this._handleMouseMove, this);
+    L.DomEvent.off(this._map, 'mouseup', this._handleMouseUp, this);
+
+    if(this._resizing){
+      this._resizing = false;
+      this._map.fire('dialog:resizeend', this);
+    }
+
+    if(this._moving){
+      this._moving = false;
+      this._map.fire('dialog:moveend', this);
+    }
+  },
+
+  _move: function(diffX, diffY){
+    var newY = this.options.anchor[0] + diffY;
+    var newX = this.options.anchor[1] + diffX;
+
+    this.options.anchor[0] = newY;
+    this.options.anchor[1] = newX;
+
+    this._container.style.top = this.options.anchor[0] + 'px';
+    this._container.style.left = this.options.anchor[1] + 'px';
+
+    this._map.fire('dialog:moving', this);
+
+    this._oldMousePos.y += diffY;
+    this._oldMousePos.x += diffX;
+  },
+
+  _resize: function(diffX, diffY){
+    var newX = this.options.size[0] + diffX;
+    var newY = this.options.size[1] + diffY;
+
+    if( newX <= this.options.maxSize[0] && newX >= this.options.minSize[0]){
+      this.options.size[0] = newX;
+      this._container.style.width = this.options.size[0] + 'px';
+      this._oldMousePos.x += diffX;
+    }
+
+    if(newY <= this.options.maxSize[1] && newY >= this.options.minSize[1] ){
+      this.options.size[1] = newY;
+      this._container.style.height = this.options.size[1] + 'px';
+      this._oldMousePos.y += diffY;
+    }
+
+    this._map.fire('dialog:resizing', this);
+  },
+
+  _updateContent: function(){
+
+    if(!this._content){ return; }
+
+    var node = this._contentNode;
+    var content = (typeof this._content === 'function') ? this._content(this) : this._content;
+
+    if(typeof content === 'string'){
+      node.innerHTML = content;
+    }
+    else{
+      while(node.hasChildNodes()){
+        node.removeChild(node.firstChild);
+      }
+      node.appendChild(content);
+    }
+
+  },
+
+  _updateLayout: function(){
+
+    this._container.style.width = this.options.size[0] + 'px';
+    this._container.style.height = this.options.size[1] + 'px';
+
+    this._container.style.top = this.options.anchor[0] + 'px';
+    this._container.style.left = this.options.anchor[1] + 'px';
+
+  }
+
+});
+
+L.control.LegendContainer = function (options) {
+  return new L.Control.LegendContainer(options);
+};
+  </script>
+ </body>
+ 
+ <body>
+  <script>
+  L.Control.mouseCoordinate  = L.Control.extend({
+    options: {
+        gps: true,
+        gpsLong: true,
+        utm: false,
+        utmref: false,
+        position: 'bottomright',
+        
+        _sm_a: 6378137.0,
+        _sm_b: 6356752.314,
+        _sm_EccSquared: 6.69437999013e-03,
+        _UTMScaleFactor: 0.9996
+        
+    },
+    onAdd: function(map){
+        this._map = map;
+
+        if(L.Browser.mobile || L.Browser.mobileWebkit || L.Browser.mobileWebkit3d || L.Browser.mobileOpera || L.Browser.mobileGecko)
+            return L.DomUtil.create('div');
+        
+        var className = 'leaflet-control-mouseCoordinate';
+        var container = this._container = L.DomUtil.create('div',className);
+        
+        this._gpsPositionContainer = L.DomUtil.create("div","gpsPos",container);
+        
+        map.on("mousemove", this._update, this);
+        
+        return container;
+    },
+    _update: function(e){
+        //lat: [-90,90]
+        //lng: [-180,180]
+        var lat = (e.latlng.lat+90)%180;
+        var lng = (e.latlng.lng+180)%360;
+        if(lat < 0){
+            lat += 180;
+        }
+        lat -=90;
+        if(lng < 0){
+            lng+= 360;
+        }
+        lng -= 180;
+
+        var gps = {lat: lat,lng: lng};
+        var content = "<table style='table-layout:fixed;'>";
+        if(this.options.gps){
+            //Round for display only
+            var dLat = Math.round(lat * 100000) / 100000;
+            var dLng = Math.round(lng * 100000) / 100000;
+            var toDeg = this._geo2grad(gps);
+            content += "<tr><td align='left'>" + toDeg.NS + "" + Math.abs(dLat) + "</td><td align='left'> "+ toDeg.WE + "" + Math.abs(dLng) +"</td></tr>";
+            if(this.options.gpsLong){
+                //var gpsMinuten = this._geo2geodeziminuten(gps);
+                //content += "<tr><td></td><td class='coords'>"+ gpsMinuten.NS + " " + gpsMinuten.latgrad + "&deg; "+ gpsMinuten.latminuten+"</td><td class='coords'> " + gpsMinuten.WE + " "+ gpsMinuten.lnggrad +"&deg; "+ gpsMinuten.lngminuten +"</td></tr>";
+                var gpsMinutenSekunden = this._geo2gradminutensekunden(gps);
+                content += "<tr><td>"+ gpsMinutenSekunden.NS + "" + gpsMinutenSekunden.latgrad + "&deg;"+ gpsMinutenSekunden.latminuten + "&prime;"+ gpsMinutenSekunden.latsekunden+"&Prime;</td><td>" + gpsMinutenSekunden.WE + ""+ gpsMinutenSekunden.lnggrad +"&deg;"+ gpsMinutenSekunden.lngminuten + "&prime;"+ gpsMinutenSekunden.lngsekunden+"&Prime;</td></tr>";
+            }
+        }
+        if(this.options.utm){
+            var utm = UTM.fromLatLng(gps);
+            if(utm !== undefined){
+                content += "<tr><td>UTM</td><td colspan='2'>"+utm.zone+"&nbsp;" +utm.x+"&nbsp;" +utm.y+"</td></tr>";
+            }
+        }
+            
+        content += "</table>";
+        this._gpsPositionContainer.innerHTML = content;
+    },    
+
+
+    _geo2grad: /**
+     * Comment
+     */
+        function (gps) {
+            var latgrad = parseInt(gps.lat, 10);
+            var lnggrad = parseInt(gps.lng, 10);
+            return this._AddNSEW({latgrad: latgrad, lnggrad: lnggrad});
+        },
+    _geo2geodeziminuten: function (gps){
+        var latgrad = parseInt(gps.lat,10);
+        var latminuten = Math.round( ((gps.lat - latgrad) * 60) * 10000 ) / 10000;
+
+        var lnggrad = parseInt(gps.lng,10);
+        var lngminuten = Math.round( ((gps.lng - lnggrad) * 60) * 10000 ) / 10000;
+
+        return this._AddNSEW({latgrad: latgrad, latminuten: latminuten, lnggrad: lnggrad, lngminuten: lngminuten});
+    },
+    _geo2gradminutensekunden: function (gps){
+        var latgrad = parseInt(gps.lat,10);
+        var latminuten = (gps.lat - latgrad) * 60;
+        var latsekunden = Math.abs(Math.round(((latminuten - parseInt(latminuten,10)) * 60) * 10) / 10);
+        latminuten = Math.abs(parseInt(latminuten,10));
+
+        var lnggrad = parseInt(gps.lng,10);
+        var lngminuten = (gps.lng - lnggrad) * 60;
+        var lngsekunden = Math.abs(Math.round(((lngminuten - parseInt(lngminuten,10)) * 60) * 10) /10);
+        lngminuten = Math.abs(parseInt(lngminuten,10));
+        
+        return this._AddNSEW({latgrad: latgrad, latminuten: latminuten,latsekunden: latsekunden, lnggrad: lnggrad, lngminuten: lngminuten, lngsekunden: lngsekunden});
+    },
+    _AddNSEW: function (coord){
+        coord.NS = "N";
+        coord.WE = "E";
+        if(coord.latgrad < 0){
+            coord.latgrad = coord.latgrad * (-1);
+            coord.NS = "S";
+        }
+        if(coord.lnggrad < 0){
+            coord.lnggrad = coord.lnggrad * (-1);
+            coord.WE = "W";
+        }
+        return coord;
+    }
+
+});
+
+L.control.mouseCoordinate = function (options) {
+    return new L.Control.mouseCoordinate(options);
+};
+;
+var NAC = {
+
+    /**
+     *
+     * @param {{lat: number, lng: number}}
+     * @returns {string}
+     */
+    fromLatLng: function(latlng) {
+
+        var lat = latlng.lat;
+        var lon = latlng.lng;
+        var x = [];
+        var y = [];
+        var xy = [];
+        xy.x = '';
+        xy.y = '';
+        if (lon >= -180 && lon <= 180) {
+            var xlon = (lon + 180) / 360;
+            x = this._calcValues(xlon);
+        } else {
+            x[0] = 0;
+        }
+        if (lat >= -90 && lat <= 90) {
+            var ylat = (lat + 90) / 180;
+            y = this._calcValues(ylat);
+        } else {
+            y[0] = 0;
+        }
+        for (var i = 0; i < x.length; i++) {
+            xy.x += this._nac2Letter(x[i]);
+        }
+        for (i = 0; i < y.length; i++) {
+            xy.y += this._nac2Letter(y[i]);
+        }
+        return xy;
+    },
+
+    /**
+     * 
+     * @param z
+     * @returns {Array}
+     * @private
+     */
+    _calcValues: function (z){
+        var ret = [];
+        ret[0] = parseInt(z * 30,10);
+        ret[1] = parseInt((z * 30 - ret[0]) * 30,10);
+        ret[2] = parseInt(((z * 30 - ret[0]) * 30 - ret[1]) * 30,10);
+        ret[3] = parseInt((((z * 30 - ret[0]) * 30 - ret[1]) * 30 - ret[2]) * 30,10);
+        ret[4] = parseInt(((((z * 30 - ret[0]) * 30 - ret[1]) * 30 - ret[2]) * 30 - ret[3]) * 30,10);
+        ret[5] = parseInt((((((z * 30 - ret[0]) * 30 - ret[1]) * 30 - ret[2]) * 30 - ret[3]) * 30 - ret[4]) * 30,10);
+        return ret;
+    },
+
+    /**
+     *
+     * @param number
+     * @returns {string}
+     * @private
+     */
+    _nac2Letter: function(number){
+        var nac_letters = "0123456789BCDFGHJKLMNPQRSTVWXZ";
+        if(!isNaN(number) && number < 30)
+            return nac_letters.substr(number,1);
+        else return 0;
+    }
+
+};;
+
+
+var QTH = {
+    fromLatLng: function(latlng){
+        var ychr = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        var ynum = "0123456789";
+        var yqth, yi, yk, ydiv, yres, ylp;
+        var y = 0;
+        var ycalc = [0,0,0];
+        var yn = [0,0,0,0,0,0,0];
+
+        ycalc[1] = latlng.lng+ 180;
+        ycalc[2] = latlng.lat +  90;
+
+        for (yi = 1; yi < 3; ++yi) {
+            for (yk = 1; yk < 4; ++yk) {
+                if (yk !== 3) {
+                    if (yi === 1) {
+                        if (yk === 1) ydiv = 20;
+                        if (yk === 2) ydiv = 2;
+                    }
+                    if (yi === 2) {
+                        if (yk === 1) ydiv = 10;
+                        if (yk === 2) ydiv = 1;
+                    }
+
+                    yres = ycalc[yi] / ydiv;
+                    ycalc[yi] = yres;
+                    if (ycalc[yi]>0)
+                        ylp = Math.floor(yres);
+                    else
+                        ylp = Math.ceil(yres);
+                    ycalc[yi] = (ycalc[yi] - ylp) * ydiv;
+                }
+                else {
+                    if (yi === 1)
+                        ydiv = 12;
+                    else
+                        ydiv = 24;
+
+                    yres = ycalc[yi] * ydiv;
+                    ycalc[yi] = yres;
+                    if (ycalc[yi] > 0)
+                        ylp = Math.floor(yres);
+                    else
+                        ylp = Math.ceil(yres);
+                }
+
+                ++y;
+                yn[y] = ylp;
+            }
+        }
+
+        yqth = ychr.charAt(yn[1]) + ychr.charAt(yn[4]) + ynum.charAt(yn[2]);
+        yqth += ynum.charAt(yn[5]) + ychr.charAt(yn[3])+ ychr.charAt(yn[6]);
+        return yqth;
+    }
+
+};;
+
+var UTM = {
+    fromLatLng: function (latlng) {
+        var lw = latlng.lng;
+        var bw = latlng.lat;
+        if(lw === -180)
+            lw += 1e-13;//Number.MIN_VALUE;
+        if(lw === 180)
+            lw -= 1e-13;//umber.MIN_VALUE;
+        if(bw === -90)  bw += 1e-13;//umber.MIN_VALUE;
+        if(bw === 90)   bw -= 1e-13;//umber.MIN_VALUE;
+        // Geographische Laenge lw und Breite bw im WGS84 Datum
+        if (lw <= -180 || lw >= 180 || bw <= -80 || bw >= 84){
+            console.error("Out of lw <= -180 || lw >= 180 || bw <= -80 || bw >= 84 bounds, which is kinda similar to UTM bounds, if you ignore the poles");
+            //alert("Werte nicht im Bereich des UTM Systems\n -180 <= LW < +180, -80 < BW < 84 N"); // jshint ignore:line
+            return;
+        }
+        lw = parseFloat(lw);
+        bw = parseFloat(bw);
+
+        // WGS84 Datum
+        // Grosse Halbachse a und Abplattung f
+        var a = 6378137.000;
+        var f = 3.35281068e-3;
+        var pi = Math.PI;
+        var b_sel = 'CDEFGHJKLMNPQRSTUVWXX';
+
+        // Polkruemmungshalbmesser c
+        var c = a/(1-f);
+
+        // Quadrat der zweiten numerischen Exzentrizitaet
+        var ex2 = (2*f-f*f)/((1-f)*(1-f));
+        var ex4 = ex2*ex2;
+        var ex6 = ex4*ex2;
+        var ex8 = ex4*ex4;
+
+        // Koeffizienten zur Berechnung der Meridianbogenlaenge
+        var e0 = c*(pi/180)*(1 - 3*ex2/4 + 45*ex4/64 - 175*ex6/256 + 11025*ex8/16384);
+        var e2 = c*( - 3*ex2/8 + 15*ex4/32 - 525*ex6/1024 +  2205*ex8/4096);
+        var e4 = c*(15*ex4/256 - 105*ex6/1024 + 2205*ex8/16384);
+        var e6 = c*( - 35*ex6/3072 + 315*ex8/12288);
+
+        // Laengenzone lz und Breitenzone (Band) bz
+        var lzn = parseInt((lw+180)/6,10) + 1;
+        var lz = lzn;
+        if (lzn < 10){
+            lz = "0" + lzn;
+        }
+
+        if (bw >= 56.0 && bw < 64.0 && lw >= 3.0 && lw < 12.0) {
+            lz = 32;
+        }
+
+        // Special zones for Svalbard
+        if (bw >= 72.0 && bw < 84.0) {
+            if (lw >= 0.0 && lw < 9.0) {
+                lz = 31;
+            }
+            else if (lw >= 9.0 && lw < 21.0) {
+                lz = 33;
+            }
+            else if (lw >= 21.0 && lw < 33.0) {
+                lz = 35;
+            }
+            else if (lw >= 33.0 && lw < 42.0) {
+                lz = 37;
+            }
+        }
+
+        var bd = parseInt(1 + (bw + 80)/8,10);
+        var bz = b_sel.substr(bd-1,1);
+
+        // Geographische Breite in Radianten br
+        var br = bw * pi/180;
+
+        var tan1 = Math.tan(br);
+        var tan2 = tan1*tan1;
+        var tan4 = tan2*tan2;
+
+        var cos1 = Math.cos(br);
+        var cos2 = cos1*cos1;
+        var cos4 = cos2*cos2;
+        var cos3 = cos2*cos1;
+        var cos5 = cos4*cos1;
+
+        var etasq = ex2*cos2;
+
+        // Querkruemmungshalbmesser nd
+        var nd = c/Math.sqrt(1 + etasq);
+
+        // Meridianbogenlaenge g aus gegebener geographischer Breite bw
+        var g = (e0*bw) + (e2*Math.sin(2*br)) + (e4*Math.sin(4*br)) + (e6*Math.sin(6*br));
+
+        // Laengendifferenz dl zum Bezugsmeridian lh
+        var lh = (lzn - 30)*6 - 3;
+        var dl = (lw - lh)*pi/180;
+        var dl2 = dl*dl;
+        var dl4 = dl2*dl2;
+        var dl3 = dl2*dl;
+        var dl5 = dl4*dl;
+
+        // Masstabsfaktor auf dem Bezugsmeridian bei UTM Koordinaten m = 0.9996
+        // Nordwert nw und Ostwert ew als Funktion von geographischer Breite und Laenge
+        var nw;
+        if ( bw < 0 ) {
+            nw = 10e6 + 0.9996*(g + nd*cos2*tan1*dl2/2 + nd*cos4*tan1*(5-tan2+9*etasq)*dl4/24);
+        }
+        else {
+            nw = 0.9996*(g + nd*cos2*tan1*dl2/2 + nd*cos4*tan1*(5-tan2+9*etasq)*dl4/24);
+        }
+        var ew = 0.9996*( nd*cos1*dl + nd*cos3*(1-tan2+etasq)*dl3/6 + nd*cos5 *(5-18*tan2+tan4)*dl5/120) + 500000;
+
+        var zone = lz+bz;
+
+        var nk = nw - parseInt(nw,10);
+        if (nk < 0.5) {
+            nw = "" + parseInt(nw,10);
+        }
+        else{
+            nw = "" + (parseInt(nw,10) + 1);
+        }
+
+        while (nw.length < 7) {
+            nw = "0" + nw;
+        }
+
+        nk = ew - parseInt(ew,10);
+        if (nk < 0.5) {
+            ew = "0" + parseInt(ew,10);
+        }
+        else {
+            ew = "0" + parseInt(ew+1,10);
+        }
+
+        return {zone: zone, x: ew, y: nw};
+    },
+
+
+    toLatLng: function (utm){
+
+        var zone = utm.zone;
+        var ew = utm.x;
+        var nw = utm.y;
+        // Laengenzone zone, Ostwert ew und Nordwert nw im WGS84 Datum
+        if (zone === "" || ew === "" || nw === ""){
+            zone = "";
+            ew = "";
+            nw = "";
+            return;
+        }
+        var band = zone.substr(2,1);
+        zone = parseFloat(zone);
+        ew = parseFloat(ew);
+        nw = parseFloat(nw);
+
+        // WGS84 Datum
+        // Grosse Halbachse a und Abplattung f
+        var a = 6378137.000;
+        var f = 3.35281068e-3;
+        var pi = Math.PI;
+
+        // Polkruemmungshalbmesser c
+        var c = a/(1-f);
+
+        // Quadrat der zweiten numerischen Exzentrizitaet
+        var ex2 = (2*f-f*f)/((1-f)*(1-f));
+        var ex4 = ex2*ex2;
+        var ex6 = ex4*ex2;
+        var ex8 = ex4*ex4;
+
+        // Koeffizienten zur Berechnung der geographischen Breite aus gegebener
+        // Meridianbogenlaenge
+        var e0 = c*(pi/180)*(1 - 3*ex2/4 + 45*ex4/64 - 175*ex6/256 + 11025*ex8/16384);
+        var f2 =   (180/pi)*(    3*ex2/8 - 3*ex4/16  + 213*ex6/2048 -  255*ex8/4096);
+        var f4 =              (180/pi)*(  21*ex4/256 -  21*ex6/256  +  533*ex8/8192);
+        var f6 =                           (180/pi)*(  151*ex6/6144 -  453*ex8/12288);
+
+        // Entscheidung Nord-/Sued Halbkugel
+        var m_nw;
+        if (band >= "N"|| band === ""){
+            m_nw = nw;
+        }
+        else{
+            m_nw = nw - 10e6;
+        }
+
+        // Geographische Breite bf zur Meridianbogenlaenge gf = m_nw
+        var sigma = (m_nw/0.9996)/e0;
+        var sigmr = sigma*pi/180;
+        var bf = sigma + f2*Math.sin(2*sigmr) + f4*Math.sin(4*sigmr) + f6*Math.sin(6*sigmr);
+
+        // Breite bf in Radianten
+        var br = bf * pi/180;
+        var tan1 = Math.tan(br);
+        var tan2 = tan1*tan1;
+        var tan4 = tan2*tan2;
+
+        var cos1 = Math.cos(br);
+        var cos2 = cos1*cos1;
+
+        var etasq = ex2*cos2;
+
+        // Querkruemmungshalbmesser nd
+        var nd = c/Math.sqrt(1 + etasq);
+        var nd2 = nd*nd;
+        var nd4 = nd2*nd2;
+        var nd6 = nd4*nd2;
+        var nd3 = nd2*nd;
+        var nd5 = nd4*nd;
+
+        // Laengendifferenz dl zum Bezugsmeridian lh
+        var lh = (zone - 30)*6 - 3;
+        var dy = (ew-500000)/0.9996;
+        var dy2 = dy*dy;
+        var dy4 = dy2*dy2;
+        var dy3 = dy2*dy;
+        var dy5 = dy3*dy2;
+        var dy6 = dy3*dy3;
+
+        var b2 = - tan1*(1+etasq)/(2*nd2);
+        var b4 =   tan1*(5+3*tan2+6*etasq*(1-tan2))/(24*nd4);
+        var b6 = - tan1*(61+90*tan2+45*tan4)/(720*nd6);
+
+        var l1 =   1/(nd*cos1);
+        var l3 = - (1+2*tan2+etasq)/(6*nd3*cos1);
+        var l5 =   (5+28*tan2+24*tan4)/(120*nd5*cos1);
+
+        // Geographische Breite bw und Laenge lw als Funktion von Ostwert ew
+        // und Nordwert nw
+        var bw = bf + (180/pi) * (b2*dy2 + b4*dy4 + b6*dy6);
+        var lw = lh + (180/pi) * (l1*dy  + l3*dy3 + l5*dy5);
+
+        return {lat: bw, lng: lw};
+    }
+};
+;
+var UTMREF = {
+
+    /**
+     *
+     * @param {{zone: string, x: number, y: number}}
+     * @returns {{zone, band: string, x: string, y: string}}
+     */
+    fromUTM: function (utm) {
+        if(utm === undefined){
+            return;
+        }
+
+        var zone = utm.zone;
+        var ew = utm.x;
+        var nw = utm.y;
+
+        // Laengenzone zone, Ostwert ew und Nordwert nw im WGS84 Datum
+        var z1 = zone.substr(0, 2);
+        var z2 = zone.substr(2, 1);
+        var ew1 = parseInt(ew.substr(0, 2),10);
+        var nw1 = parseInt(nw.substr(0, 2),10);
+        var ew2 = ew.substr(2, 5);
+        var nw2 = nw.substr(2, 5);
+
+        var m_east = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+        var m_north = 'ABCDEFGHJKLMNPQRSTUV';
+
+        /*if (z1 < "01" || z1 > "60" || z2 < "C" || z2 > "X") {
+            alert(z1 + z2 + " ist keine gueltige UTM Zonenangabe"); // jshint ignore:line
+        }*/
+
+        var m_ce;
+        var i = z1 % 3;
+        if (i === 1) {
+            m_ce = ew1 - 1;
+        }
+        if (i === 2) {
+            m_ce = ew1 + 7;
+        }
+        if (i === 0) {
+            m_ce = ew1 + 15;
+        }
+
+        i = z1 % 2;
+        var m_cn;
+        if (i === 1) {
+            m_cn = 0;
+        }
+        else {
+            m_cn = 5;
+        }
+
+        i = nw1;
+        while (i - 20 >= 0) {
+            i = i - 20;
+        }
+
+        m_cn = m_cn + i;
+        if (m_cn > 19) {
+            m_cn = m_cn - 20;
+        }
+
+        var band = m_east.charAt(m_ce) + m_north.charAt(m_cn);
+
+        return {zone: zone, band: band, x: ew2, y: nw2};
+    },
+
+    /**
+     *
+     * @param {{zone, band: string, x: string, y: string}}
+     * @returns {{zone: string, x: number, y: number}}
+     */
+    toUTM: function (mgr) {
+
+        // Laengenzone zone, Ostwert ew und Nordwert nw im WGS84 Datum
+        var m_east_0 = "STUVWXYZ";
+        var m_east_1 = "ABCDEFGH";
+        var m_east_2 = "JKLMNPQR";
+        var m_north_0 = "FGHJKLMNPQRSTUVABCDE";
+        var m_north_1 = "ABCDEFGHJKLMNPQRSTUV";
+
+        //zone = raster.substr(0,3);
+        var zone = mgr.zone;
+        var r_east = mgr.band.substr(0, 1);
+        var r_north = mgr.band.substr(1, 1);
+
+        var i = parseInt(zone.substr(0, 2),10) % 3;
+        var m_ce;
+        if (i === 0) {
+            m_ce = m_east_0.indexOf(r_east) + 1;
+        }
+        if (i === 1) {
+            m_ce = m_east_1.indexOf(r_east) + 1;
+        }
+        if (i === 2) {
+            m_ce = m_east_2.indexOf(r_east) + 1;
+        }
+        var ew = "0" + m_ce;
+
+        var m_cn = this._mgr2utm_find_m_cn(zone);
+
+        var nw;
+        if (m_cn.length === 1) {
+            nw = "0" + m_cn;
+        }
+        else {
+            nw = "" + m_cn;
+        }
+
+        return {zone: zone, x: ew, y: nw};
+    }
+
+};
+  </script>
+ </body>
+ 
+ 
+ <body>
+<style>
+
+body {
+    padding: 0;
+    margin: 0;
+}
+
+.mapbox {
+    position: relative;
+}
+
+.mapbox .overlay {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    pointer-events: none;
+}
+
+.mapbox .overlay .btn {
+    pointer-events: initial;
+}
+
+.leaflet-control-zoom-display {
+    background-color: #fff;
+    border-bottom: 2px solid #ccc;
+    width: 30px;
+    height: 28px;
+    line-height: 32px;
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    color: black;
+    padding-top: 0.5em;
+    font: bold 14px/20px Tahoma, Verdana, sans-serif;
+}
+
+.leaflet-control-mouseCoordinate{
+    width:160px;
+    min-height:30px;
+    text-align:left;
+    table-layout:fixed;
+    border-radius:5px;
+    overflow:hidden;
+    box-shadow:0 1px 5px rgba(0,0,0,.6);
+    background:  #fff;
+    color:#333;padding:6px 10px 6px 6px
+}
+.leaflet-control-mouseCoordinate table{
+    width:100%
+}
+.coords{
+    width:60px;
+}
+
+.leaflet-container.crosshair-cursor-enabled {
+    cursor: crosshair;
+    
+}
+
+.leaflet-control-dialog{
+  position: absolute;
+  background-color: #fff;
+  padding: 0px;
+  text-align: left;
+  border-radius: 4px;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+}
+
+.leaflet-control-dialog .leaflet-control-dialog-inner{
+  position: relative;
+  box-sizing: border-box;
+  float: left;
+  width: 100%;
+  height: 100%;
+  padding: 20px 0px;
+}
+
+.leaflet-control-dialog .leaflet-control-dialog-inner .leaflet-control-dialog-grabber{
+  position: absolute;
+  box-sizing: border-box;
+  width: 20px;
+  height: 20px;
+  top: 0px;
+  left: 0px;
+  padding: 3px;
+  font-size: 15px;
+  line-height: 15px;
+  color: #ccc;
+}
+
+.leaflet-control-dialog .leaflet-control-dialog-inner .leaflet-control-dialog-grabber:hover{
+  cursor: grab;
+  cursor: -webkit-grab;
+  cursor: -moz-grab;
+}
+
+.leaflet-control-dialog .leaflet-control-dialog-inner .leaflet-control-dialog-close{
+  position: absolute;
+  box-sizing: border-box;
+  width: 20px;
+  height: 20px;
+  top: 0px;
+  right: 0px;
+  padding: 2px;
+  font-size: 16px;
+  line-height: 16px;
+  color: #666;
+}
+
+.leaflet-control-dialog .leaflet-control-dialog-inner .leaflet-control-dialog-close:hover{
+  cursor: pointer;
+}
+
+.leaflet-control-dialog .leaflet-control-dialog-inner .leaflet-control-dialog-contents{
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+  padding: 0 20px;
+  min-height: 50px;
+  overflow: auto;
+  box-sizing: border-box;
+}
+
+.leaflet-control-dialog .leaflet-control-dialog-inner .leaflet-control-dialog-resizer{
+  position: absolute;
+  box-sizing: border-box;
+  width: 20px;
+  height: 20px;
+  bottom: 0px;
+  right: 0px;
+  padding: 2px;
+  font-size: 16px;
+  line-height: 16px;
+  color: #ccc;
+}
+
+.leaflet-control-dialog .leaflet-control-dialog-inner .leaflet-control-dialog-resizer:hover{
+  cursor: grab;
+  cursor: -webkit-grab;
+  cursor: -moz-grab;
+}
+
+</style>
+ </body>
+ 	
+</html>
